@@ -9,20 +9,24 @@ events {
 }
 
 stream {
-    {{range gets "/services/networks"}}
-        {{$port := index (split (.Value) ":") 1}}
-        {{$hosts := printf "/services/%s" (.Key)}}
-        
-        upstream {{.Key}} {
+
+    {{range ls "/services/networks"}}
+        {{$network := getv (printf "/services/networks/%s" (.))}}
+        {{$port := index (split $network ":") 1}}
+        {{$hosts := printf "/services/%s/*" (.)}}
+
+        upstream {{.}} {
             {{range gets $hosts}}
                 server {{.Value}}:{{$port}};
+            {{else}}
+                # Don't let nginx fail to reload if upstream servers aren't present - this will gracefully fail
+                server localhost:{{$port}};
             {{end}}
         }
 
         server {
             listen {{$port}};
-            proxy_pass {{.Key}};
+            proxy_pass {{.}};
         }
-
     {{end}}
 }
