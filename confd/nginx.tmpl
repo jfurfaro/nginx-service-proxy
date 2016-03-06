@@ -1,0 +1,28 @@
+user  nginx;
+worker_processes  1;
+
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+events {
+    worker_connections  1024;
+}
+
+stream {
+    {{range gets "/services/networks"}}
+        {{$port := index (split (.Value) ":") 1}}
+        {{$hosts := printf "/services/%s" (.Key)}}
+        
+        upstream {{.Key}} {
+            {{range gets $hosts}}
+                server {{.Value}}:{{$port}};
+            {{end}}
+        }
+
+        server {
+            listen {{$port}};
+            proxy_pass {{.Key}};
+        }
+
+    {{end}}
+}
