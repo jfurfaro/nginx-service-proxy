@@ -19,7 +19,7 @@ stream {
             {{range gets $hosts}}
                 server {{.Value}}:{{$port}};
             {{else}}
-                # Don't let nginx fail to reload if upstream servers aren't present - this will gracefully fail
+                # Don't let nginx fail to reload if upstream servers aren't present 
                 server localhost:{{$port}};
             {{end}}
         }
