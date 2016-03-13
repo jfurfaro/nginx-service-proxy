@@ -6,5 +6,4 @@ mode = "0644"
 keys = [ 
 	"/services" 
 ]
-check_cmd = "/usr/sbin/nginx -t"
-reload_cmd = "/usr/sbin/service nginx reload"
+reload_cmd = "echo -e "POST /containers/nginx/kill?signal=HUP HTTP/1.0\r\n" | nc -U /var/run/docker.sock"

@@ -1,4 +1,4 @@
-FROM nginx:1.9
+FROM ubuntu:14.04
 
 RUN apt-get update && \
     apt-get install -y curl && \
@@ -13,7 +13,4 @@ RUN mkdir -p /etc/confd/conf.d
 COPY confd/nginx.toml /etc/confd/conf.d/
 COPY confd/nginx.tmpl /etc/confd/templates/
 
-COPY confd-watch /usr/local/bin/confd-watch
-RUN chmod +x /usr/local/bin/confd-watch
-
-CMD ["/usr/local/bin/confd-watch"]
+CMD /usr/bin/confd -interval=60 -node=http://$ETCD
