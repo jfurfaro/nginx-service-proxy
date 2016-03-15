@@ -6,4 +6,4 @@ mode = "0644"
 keys = [ 
 	"/services" 
 ]
-reload_cmd = "echo -e \"POST /containers/nginx/kill?signal=HUP HTTP/1.0\r\n\" | nc -U /var/run/docker.sock"
+reload_cmd = "echo -e \"POST /containers/service-proxy/kill?signal=HUP HTTP/1.0\r\n\" | nc -U /var/run/docker.sock"
